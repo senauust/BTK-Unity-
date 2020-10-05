@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     int dıvıdend, dıvısor;
     int whıchquestıon;
     int buttonValue;
+    int trueResult;
 
     bool IstheButtonPressed;
 
@@ -64,7 +65,21 @@ public class GameManager : MonoBehaviour
         if (IstheButtonPressed)
         {
             buttonValue = int.Parse(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text);
-            Debug.Log(buttonValue);
+
+            checkResult();
+        }
+    }
+
+    void checkResult()
+    {
+        if(buttonValue == trueResult)
+        {
+            Debug.Log("True result");
+
+        }
+        else
+        {
+            Debug.Log("False result");
         }
     }
     IEnumerator DoFadeRoutine()
@@ -108,7 +123,9 @@ public class GameManager : MonoBehaviour
 
         whıchquestıon = Random.Range(0, ListofPartıtıonValues.Count);
 
-        dıvıdend = dıvısor * ListofPartıtıonValues[whıchquestıon];
+        trueResult = ListofPartıtıonValues[whıchquestıon];
+
+        dıvıdend = dıvısor * trueResult ;
 
         questionText.text = dıvıdend.ToString() + ":" + dıvısor.ToString();
 
