@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class GameManager : MonoBehaviour
@@ -28,9 +29,12 @@ public class GameManager : MonoBehaviour
             squareArrays[i] = square;
 
         }
+
+        PrintingSectionValueinText();
+
         StartCoroutine(DoFadeRoutine());
     }
-IEnumerator DoFadeRoutine()
+    IEnumerator DoFadeRoutine()
     {
         foreach (var square in squareArrays)
         {
@@ -41,5 +45,13 @@ IEnumerator DoFadeRoutine()
         }
     }
 
+    void PrintingSectionValueinText()
+    {
+        foreach (var square in squareArrays)
+        {
+            int randomValue = Random.Range(1, 13);
+            square.transform.GetChild(0).GetComponent<Text>().text = randomValue.ToString();
 
+        }
+    }
 }
