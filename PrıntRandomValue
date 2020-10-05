@@ -19,9 +19,22 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private Transform questıonPanel;
+
+    [SerializeField]
+    private Text questionText;
+
+    List<int> ListofPartıtıonValues = new List<int>();
+
+    int dıvıdend, dıvısor;
+    int whıchquestıon;
+    int buttonValue;
+
+    bool IstheButtonPressed;
+
     
     void Start()
     {
+        IstheButtonPressed = false;
         questıonPanel.GetComponent<RectTransform>().localScale = Vector3.zero;
         makesquare();
     }
@@ -30,8 +43,11 @@ public class GameManager : MonoBehaviour
     {
         for(int i=0; i<25; i++)
         {
-            GameObject square = Instantiate(squarePrefab, squarePanel);
-            squareArrays[i] = square;
+            
+            
+           GameObject square = Instantiate(squarePrefab, squarePanel);
+           square.transform.GetComponent<Button>().onClick.AddListener(() => ClickButton());
+           squareArrays[i] = square;
 
         }
 
@@ -42,31 +58,59 @@ public class GameManager : MonoBehaviour
         Invoke("OpenquestıonPanel", 2f);
 
     }
+
+    void ClickButton()
+    {
+        if (IstheButtonPressed)
+        {
+            buttonValue = int.Parse(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text);
+            Debug.Log(buttonValue);
+        }
+    }
     IEnumerator DoFadeRoutine()
     {
-        foreach (var square in squareArrays)
+        foreach (var squarePrefab in squareArrays)
         {
-            square.GetComponent<CanvasGroup>().DOFade(1, .2f);
+            squarePrefab.GetComponent<CanvasGroup>().DOFade(1, .2f);
 
             yield return new WaitForSeconds(0.07f);
+
+
 
         }
     }
 
     void PrintSectionValueinText()
     {
-        foreach (var square in squareArrays)
+        foreach (var squarePrefab in squareArrays)
         {
             int randomValue = Random.Range(1, 13);
-            square.transform.GetChild(0).GetComponent<Text>().text = randomValue.ToString();
+
+            ListofPartıtıonValues.Add(randomValue);
+
+            squarePrefab.transform.GetChild(0).GetComponent<Text>().text = randomValue.ToString();
 
         }
+
+        //Debug.Log(ListofPartıtıonValues[0]);
     }
 
     void OpenquestıonPanel()
     {
+        Askquestıon();
+        IstheButtonPressed = true;
         questıonPanel.GetComponent<RectTransform>().DOScale(1, 0.3f).SetEase(Ease.OutBack);
     }
 
+    void Askquestıon()
+    {
+        dıvısor = Random.Range(2, 11);
 
+        whıchquestıon = Random.Range(0, ListofPartıtıonValues.Count);
+
+        dıvıdend = dıvısor * ListofPartıtıonValues[whıchquestıon];
+
+        questionText.text = dıvıdend.ToString() + ":" + dıvısor.ToString();
+
+    }
 }
