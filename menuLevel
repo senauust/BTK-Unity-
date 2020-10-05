@@ -110,14 +110,33 @@ public class GameManager : MonoBehaviour
             ListofPartıtıonValues.RemoveAt(whıchquestıon);
             Debug.Log(ListofPartıtıonValues.Count);
             OpenquestıonPanel();
+            if(ListofPartıtıonValues.Count>0)
+            {
+                OpenquestıonPanel();
 
+            }
+            else
+            {
+                TheEnd();
+            }
         }
         else
         {
             lastHeal--;
             lastHealthManager.checkLasthealth(lastHeal);
         }
+        if (lastHeal<=0)
+        {
+            TheEnd();
+        }
+    
     }
+
+    void TheEnd()
+    {
+        Debug.Log("The end");
+    }
+
     IEnumerator DoFadeRoutine()
     {
         foreach (var squarePrefab in squareArrays)
