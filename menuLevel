@@ -23,6 +23,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Text questionText;
 
+    [SerializeField]
+    private Sprite[] squareSprites;
+
+
     List<int> ListofPartıtıonValues = new List<int>();
 
     int dıvıdend, dıvısor;
@@ -32,7 +36,28 @@ public class GameManager : MonoBehaviour
 
     bool IstheButtonPressed;
 
-    
+    int lastHeal;
+
+    string TheDifficultyofTheProblem;
+
+    LastHealthManager lastHealthManager;
+
+    pointManager PointManager;
+
+    GameObject CurrentSquare;
+
+    private void Awake()
+    {
+        lastHeal = 3;
+
+        lastHealthManager = Object.FindObjectOfType<LastHealthManager>();
+
+        PointManager = Object.FindObjectOfType<pointManager>();
+
+        lastHealthManager.checkLasthealth(lastHeal);
+
+    }
+
     void Start()
     {
         IstheButtonPressed = false;
@@ -47,6 +72,7 @@ public class GameManager : MonoBehaviour
             
             
            GameObject square = Instantiate(squarePrefab, squarePanel);
+           square.transform.GetChild(1).GetComponent<Image>().sprite = squareSprites[Random.Range(0,squareSprites.Length)];
            square.transform.GetComponent<Button>().onClick.AddListener(() => ClickButton());
            squareArrays[i] = square;
 
@@ -66,6 +92,9 @@ public class GameManager : MonoBehaviour
         {
             buttonValue = int.Parse(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text);
 
+            CurrentSquare = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
+
+
             checkResult();
         }
     }
@@ -74,12 +103,19 @@ public class GameManager : MonoBehaviour
     {
         if(buttonValue == trueResult)
         {
-            Debug.Log("True result");
+            CurrentSquare.transform.GetChild(1).GetComponent<Image>().enabled = true;
+            CurrentSquare.transform.GetChild(0).GetComponent<Text>.text = "";
+            CurrentSquare.transform.GetComponent<Button>().interactable = false;
+            PointManager.IncreasePoint(TheDifficultyofTheProblem);
+            ListofPartıtıonValues.RemoveAt(whıchquestıon);
+            Debug.Log(ListofPartıtıonValues.Count);
+            OpenquestıonPanel();
 
         }
         else
         {
-            Debug.Log("False result");
+            lastHeal--;
+            lastHealthManager.checkLasthealth(lastHeal);
         }
     }
     IEnumerator DoFadeRoutine()
@@ -87,6 +123,7 @@ public class GameManager : MonoBehaviour
         foreach (var squarePrefab in squareArrays)
         {
             squarePrefab.GetComponent<CanvasGroup>().DOFade(1, .2f);
+            
 
             yield return new WaitForSeconds(0.07f);
 
@@ -126,6 +163,23 @@ public class GameManager : MonoBehaviour
         trueResult = ListofPartıtıonValues[whıchquestıon];
 
         dıvıdend = dıvısor * trueResult ;
+
+        if(dıvıdend <= 40 )
+        {
+            TheDifficultyofTheProblem = "easy";
+
+        }
+
+        else if (dıvıdend>40 && dıvıdend <= 80 )
+        {
+            TheDifficultyofTheProblem = "middle";
+        }
+
+        else
+        {
+            TheDifficultyofTheProblem = "hard";
+        }
+
 
         questionText.text = dıvıdend.ToString() + ":" + dıvısor.ToString();
 
