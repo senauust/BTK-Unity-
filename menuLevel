@@ -49,10 +49,16 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject ResultPanel;
 
+    [SerializeField]
+    AudioSource audioSource;
+
+    public AudioClip buttonSound;
 
     private void Awake()
     {
         lastHeal = 3;
+
+        audioSource = GetComponent<AudioSource>();
 
         ResultPanel.GetComponent<RectTransform>().localScale = Vector3.zero;
 
@@ -95,7 +101,10 @@ public class GameManager : MonoBehaviour
     void ClickButton()
     {
         if (IstheButtonPressed)
+
         {
+            audioSource.PlayOneShot(buttonSound);
+
             buttonValue = int.Parse(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text);
 
             CurrentSquare = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
