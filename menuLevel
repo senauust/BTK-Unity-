@@ -46,9 +46,15 @@ public class GameManager : MonoBehaviour
 
     GameObject CurrentSquare;
 
+    [SerializeField]
+    private GameObject ResultPanel;
+
+
     private void Awake()
     {
         lastHeal = 3;
+
+        ResultPanel.GetComponent<RectTransform>().localScale = Vector3.zero;
 
         lastHealthManager = Object.FindObjectOfType<LastHealthManager>();
 
@@ -134,7 +140,8 @@ public class GameManager : MonoBehaviour
 
     void TheEnd()
     {
-        Debug.Log("The end");
+        IstheButtonPressed = false;
+        ResultPanel.GetComponent<RectTransform>().DOScale(1, 0.3f).SetEase(Ease.OutBack);
     }
 
     IEnumerator DoFadeRoutine()
